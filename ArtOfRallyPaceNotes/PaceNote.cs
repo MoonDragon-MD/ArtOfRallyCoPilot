@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using ArtOfRallyPaceNotes.Settings;
 using UnityEngine;
 using UnityModManagerNet;
-using Color = UnityEngine.Color;
-using FontStyle = UnityEngine.FontStyle;
 
 namespace ArtOfRallyPaceNotes
 {
@@ -15,6 +13,8 @@ namespace ArtOfRallyPaceNotes
         [CanBeNull] public static Dictionary<string, Texture2D> Textures = null;
         [CanBeNull] public static Dictionary<string, AudioClip> AudioClips = null;
         private static AudioSource audioSource;
+        private static string PaceNoteKey;
+        private static float LastTimestamp;
 
         public static void Draw(UnityModManager.ModEntry modEntry)
         {
@@ -43,7 +43,16 @@ namespace ArtOfRallyPaceNotes
                 texture,
                 ScaleMode.ScaleToFit
             );
+
+            var newKey = PaceNoteConfig?[PaceNoteManager.CurrentWaypointIndex];
+            if (newKey != null && newKey != PaceNoteKey)
+            {
+                PaceNoteKey = newKey;
+                LastTimestamp = Time.time;
+                PlayAudioNote(newKey); // Reproduce l'audio quando cambia la nota
+            }
         }
+
         public static void PlayAudioNote(string noteKey)
         {
             if (!Main.Settings.EnableAudio || AudioClips == null || !AudioClips.ContainsKey(noteKey))
@@ -53,14 +62,14 @@ namespace ArtOfRallyPaceNotes
             {
                 audioSource = new GameObject("PaceNoteAudio").AddComponent<AudioSource>();
                 audioSource.playOnAwake = false;
-                audioSource.spatialBlend = 0f;    // 2D audio (not spatialized)
-                audioSource.priority = 0;         // Highest priority
-                audioSource.loop = false;         // Don't repeat the audio
-                audioSource.dopplerLevel = 0f;    // Disable Doppler effect
+                audioSource.spatialBlend = 0f;    // 2D audio (non spazializzato)
+                audioSource.priority = 0;         // Massima priorità
+                audioSource.loop = false;         // Non ripetere l'audio
+                audioSource.dopplerLevel = 0f;    // Disabilitare effetto Doppler
                 GameObject.DontDestroyOnLoad(audioSource.gameObject);
             }
             
-            // Interrupts the previous audio if he is still playing
+            // Interrompi l'audio precedente se è ancora in riproduzione
             if (audioSource.isPlaying)
                 audioSource.Stop();
                 
@@ -77,15 +86,5 @@ namespace ArtOfRallyPaceNotes
                 audioSource = null;
             }
         }
-    
-        public static void Draw(UnityModManager.ModEntry modEntry)
-        {
-            var newKey = PaceNoteConfig?[PaceNoteManager.CurrentWaypointIndex];
-            if (newKey != null && newKey != PaceNoteKey)
-            {
-                PaceNoteKey = newKey;
-                LastTimestamp = Time.time;
-                PlayAudioNote(newKey); // Reproduce the audio when the note changes
-            }
     }
 }
