@@ -24,6 +24,8 @@ cd ArtOfRallyCoPilot
 
 rm -rf obj/
 
+rm -rf bin/
+
 dotnet restore
 
 nuget restore ArtOfRallyCoPilot.csproj
