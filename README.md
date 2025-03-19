@@ -20,6 +20,8 @@ sudo apt install -y dotnet-sdk-3.1
 
 ### Compilation on GNU/Linux (Debian and derivatives)
 
+cd ArtOfRallyCoPilot
+
 rm -rf obj/
 
 dotnet restore
