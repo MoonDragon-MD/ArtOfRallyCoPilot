@@ -1,10 +1,10 @@
 {
-  "Id": "PaceNotes",
-  "DisplayName": "Pace Notes",
-  "Author": "Theaninova \"Myth's gf\"",
+  "Id": "CoPilot",
+  "DisplayName": "CoPilot",
+  "Author": "MoonDragon-MD",
   "Version": "1.0.0",
   "ManagerVersion": "0.24.0.0",
   "GameVersion": "1.3.3a",
-  "AssemblyName": "ArtOfRallyPaceNotes.dll",
-  "EntryMethod": "ArtOfRallyPaceNotes.Main.Load"
+  "AssemblyName": "ArtOfRallyCoPilots.dll",
+  "EntryMethod": "ArtOfRallyCoPilots.Main.Load"
 }
