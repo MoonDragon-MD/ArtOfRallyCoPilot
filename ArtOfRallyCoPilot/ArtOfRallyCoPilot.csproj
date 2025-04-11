@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Title>Art Of Rally Copilot</Title>
     <Authors>MoonDragon-MD</Authors>
@@ -50,11 +49,10 @@
       <HintPath>libs/UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityModManager">
-      <HintPath>libs/UnityModManager\UnityModManager.dll</HintPath>
+      <HintPath>libs/UnityModManager/UnityModManager.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
       <HintPath>libs/UnityEngine.AudioModule.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

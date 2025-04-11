@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using ArtOfRallyCoPilots.Settings;
+using ArtOfRallyCoPilot.Settings;
 using UnityEngine;
 using UnityModManagerNet;
+using ArtOfRallyCoPilot; // Aggiunto per accedere a Main
 
-namespace ArtOfRallyCoPilots
+namespace ArtOfRallyCoPilot
 {
     public static class CoPilot
     {
         [CanBeNull] public static string[] CoPilotConfig = null;
-
         [CanBeNull] public static Dictionary<string, Texture2D> Textures = null;
         [CanBeNull] public static Dictionary<string, AudioClip> AudioClips = null;
         private static AudioSource audioSource;
@@ -18,7 +18,8 @@ namespace ArtOfRallyCoPilots
 
         public static void Draw(UnityModManager.ModEntry modEntry)
         {
-            var CoPilot = CoPilotConfig?[CoPilotManager.CurrentWaypointIndex]; // Modificato da CurrentWaypoint a CurrentWaypointIndex
+            var CoPilot = CoPilotConfig?[CoPilotManager.CurrentWaypointIndex];
+            Main.Logger.Log($"Waypoint corrente: {CoPilotManager.CurrentWaypointIndex}, Nota: {CoPilot ?? "null"}");
 
             if (Main.Settings.ShowCurrentWaypoint)
             {
@@ -28,11 +29,21 @@ namespace ArtOfRallyCoPilots
                 );
             }
 
-            if (CoPilot == null || Textures?.ContainsKey(CoPilot) != true) return;
+            if (CoPilot == null || Textures?.ContainsKey(CoPilot) != true)
+            {
+                Main.Logger.Log($"[WARNING] Texture non trovata per nota: {CoPilot}");
+                return;
+            }
+
             var texture = Textures![CoPilot];
+            if (texture == null)
+            {
+                Main.Logger.Log($"[ERROR] Texture nulla per nota: {CoPilot}");
+                return;
+            }
+            Main.Logger.Log($"Disegno texture: {CoPilot}");
 
             var halfSize = Main.Settings.CoPilotSize / 2;
-
             GUI.DrawTexture(
                 new Rect(
                     Screen.width * Main.Settings.PositionX - halfSize,
@@ -49,32 +60,36 @@ namespace ArtOfRallyCoPilots
             {
                 CoPilotKey = newKey;
                 LastTimestamp = Time.time;
-                PlayAudioNote(newKey); // Reproduce l'audio quando cambia la nota
+                PlayAudioNote(newKey);
             }
         }
 
         public static void PlayAudioNote(string noteKey)
         {
+            Main.Logger.Log($"Tentativo di riprodurre audio: {noteKey}");
             if (!Main.Settings.EnableAudio || AudioClips == null || !AudioClips.ContainsKey(noteKey))
+            {
+                Main.Logger.Log($"[WARNING] Audio non riprodotto - EnableAudio: {Main.Settings.EnableAudio}, AudioClips: {(AudioClips != null ? "presente" : "null")}, Contiene chiave: {AudioClips?.ContainsKey(noteKey) ?? false}");
                 return;
-            
+            }
+
             if (audioSource == null)
             {
                 audioSource = new GameObject("CoPilotAudio").AddComponent<AudioSource>();
                 audioSource.playOnAwake = false;
-                audioSource.spatialBlend = 0f;    // 2D audio (non spazializzato)
+                audioSource.spatialBlend = 0f;    // 2D audio
                 audioSource.priority = 0;         // Massima priorità
-                audioSource.loop = false;         // Non ripetere l'audio
-                audioSource.dopplerLevel = 0f;    // Disabilitare effetto Doppler
+                audioSource.loop = false;         // Non ripetere
+                audioSource.dopplerLevel = 0f;    // No effetto Doppler
                 GameObject.DontDestroyOnLoad(audioSource.gameObject);
             }
-            
-            // Interrompi l'audio precedente se è ancora in riproduzione
+
             if (audioSource.isPlaying)
                 audioSource.Stop();
-                
+
             audioSource.clip = AudioClips[noteKey];
             audioSource.volume = Main.Settings.AudioVolume;
+            Main.Logger.Log($"Riproduzione audio: {noteKey}, Volume: {audioSource.volume}");
             audioSource.Play();
         }
 

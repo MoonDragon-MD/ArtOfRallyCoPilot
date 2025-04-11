@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using JetBrains.Annotations;
+using ArtOfRallyCoPilot; // Aggiunto per accedere a Main
 
-namespace ArtOfRallyCoPilots.Loader
+namespace ArtOfRallyCoPilot.Loader
 {
     public static class CoPilotConfigLoader
     {

@@ -1,15 +1,15 @@
 ﻿using System.Reflection;
-using ArtOfRallyCoPilots.Loader;
-using ArtOfRallyCoPilots.Settings;
+using ArtOfRallyCoPilot.Loader;
+using ArtOfRallyCoPilot.Settings;
 using HarmonyLib;
 using UnityModManagerNet;
 
-namespace ArtOfRallyCoPilots
+namespace ArtOfRallyCoPilot
 {
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Main
     {
-        public static CoPilotsSettings Settings;
+        public static CoPilotSettings Settings;
 
         public static UnityModManager.ModEntry.ModLogger Logger;
         
@@ -24,7 +24,7 @@ namespace ArtOfRallyCoPilots
             var harmony = new Harmony(modEntry.Info.Id);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            Settings = UnityModManager.ModSettings.Load<CoPilotsSettings>(modEntry);
+            Settings = UnityModManager.ModSettings.Load<CoPilotSettings>(modEntry);
             CoPilot.Textures = CoPilotAssetLoader.LoadAssets();
             modEntry.OnGUI = entry => Settings.Draw(entry);
             modEntry.OnSaveGUI = entry => Settings.Save(entry);

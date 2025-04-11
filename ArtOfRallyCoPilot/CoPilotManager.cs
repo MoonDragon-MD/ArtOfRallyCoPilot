@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
 
-namespace ArtOfRallyCoPilots
+namespace ArtOfRallyCoPilot
 {
     public static class CoPilotManager
     {

@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using UnityEngine;
 
-namespace ArtOfRallyCoPilots
+namespace ArtOfRallyCoPilot
 {
     public enum CoPilotMode
     {
@@ -23,7 +23,7 @@ namespace ArtOfRallyCoPilots
 
     public class CoPilotGenerator
     {
-        public static string?[][] GenerateCoPilots(
+        public static string?[][] GenerateCoPilot(
             Vector3[] positions,
             float[] distances,
             float[] angles,
@@ -36,7 +36,7 @@ namespace ArtOfRallyCoPilots
             for (var i = 0; i < settings.Length; i++)
             {
                 var setting = settings[i];
-                var CoPilots = new string?[positions.Length];
+                var CoPilot = new string?[positions.Length];
                 var summedList = GetMeanValues(
                     setting.Mode == CoPilotMode.ANGLE ? angles : elevations,
                     distances,
@@ -54,10 +54,10 @@ namespace ArtOfRallyCoPilots
                     {
                         distance += distances[index];
                     }*/
-                    CoPilots[index] = setting.Name;
+                    CoPilot[index] = setting.Name;
                 }
 
-                result[i] = CoPilots;
+                result[i] = CoPilot;
             }
 
             return result;

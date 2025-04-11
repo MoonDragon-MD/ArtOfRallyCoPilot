@@ -1,11 +1,11 @@
-﻿using ArtOfRallyCoPilots.Loader;
-using ArtOfRallyCoPilots.Patches.OutOfBoundsManager;
+﻿using ArtOfRallyCoPilot.Loader;
+using ArtOfRallyCoPilot.Patches.OutOfBoundsManager;
 using UnityEngine;
 using UnityModManagerNet;
 
-namespace ArtOfRallyCoPilots.Settings
+namespace ArtOfRallyCoPilot.Settings
 {
-    public enum CoPilotsMode
+    public enum CoPilotMode
     {
         Off,
         Auto,
@@ -13,10 +13,10 @@ namespace ArtOfRallyCoPilots.Settings
         GeneratedOnly
     }
 
-    public class CoPilotsSettings : UnityModManager.ModSettings, IDrawable
+    public class CoPilotSettings : UnityModManager.ModSettings, IDrawable
     {
         [Header("Modes")] [Draw(DrawType.ToggleGroup)]
-        public CoPilotsMode CoPilotsMode = CoPilotsMode.Auto;
+        public CoPilotMode CoPilotMode = CoPilotMode.Auto;
 
         [Draw(DrawType.Toggle)] public bool ShowCurrentWaypoint = false;
 

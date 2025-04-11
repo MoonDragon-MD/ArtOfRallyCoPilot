@@ -1,4 +1,4 @@
-﻿namespace ArtOfRallyCoPilots.Config
+﻿namespace ArtOfRallyCoPilot.Config
 {
     public class DefaultConfig
     {
