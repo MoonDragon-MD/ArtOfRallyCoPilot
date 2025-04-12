@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using UnityEngine;
+using System; // Aggiunto per utilizzare Math
 
 namespace ArtOfRallyCoPilot
 {
@@ -36,7 +37,7 @@ namespace ArtOfRallyCoPilot
             for (var i = 0; i < settings.Length; i++)
             {
                 var setting = settings[i];
-                var CoPilot = new string?[positions.Length];
+                var coPilot = new string?[positions.Length];
                 var summedList = GetMeanValues(
                     setting.Mode == CoPilotMode.ANGLE ? angles : elevations,
                     distances,
@@ -45,19 +46,21 @@ namespace ArtOfRallyCoPilot
 
                 for (var j = 0; j < positions.Length; j++)
                 {
-                    var angle = summedList[j];
+                    var value = summedList[j];
 
-                    if (angle >= setting.MaximumValue || angle < setting.MinimumValue) continue;
+                    if (value >= setting.MaximumValue || value < setting.MinimumValue) continue;
 
                     var index = j;
-                    /*for (var distance = 0f; index >= 0 && distance <= setting.WarningDistance; index--)
+                    float distanceSum = 0f;
+                    while (index >= 0 && distanceSum <= setting.WarningDistance)
                     {
-                        distance += distances[index];
-                    }*/
-                    CoPilot[index] = setting.Name;
+                        distanceSum += distances[index];
+                        index--;
+                    }
+                    coPilot[j] = setting.Name; // Assegna la nota all'indice corrente
                 }
 
-                result[i] = CoPilot;
+                result[i] = coPilot;
             }
 
             return result;
@@ -76,6 +79,7 @@ namespace ArtOfRallyCoPilot
                     distance += distances[z];
                     result[j] += values[z];
                 }
+                result[j] /= (float)Math.Max(1, Math.Floor(distance / tolerance)); // Media semplice
             }
 
             return result;

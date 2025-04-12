@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using ArtOfRallyCoPilot.Settings;
 using UnityEngine;
 using UnityModManagerNet;
-using ArtOfRallyCoPilot; // Aggiunto per accedere a Main
+using ArtOfRallyCoPilot;
 
 namespace ArtOfRallyCoPilot
 {
@@ -15,33 +14,51 @@ namespace ArtOfRallyCoPilot
         private static AudioSource audioSource;
         private static string CoPilotKey;
         private static float LastTimestamp;
+        private static float lastLogTime; // Per limitare i log
 
         public static void Draw(UnityModManager.ModEntry modEntry)
         {
-            var CoPilot = CoPilotConfig?[CoPilotManager.CurrentWaypointIndex];
-            Main.Logger.Log($"Waypoint corrente: {CoPilotManager.CurrentWaypointIndex}, Nota: {CoPilot ?? "null"}");
+            var currentWaypointIndex = CoPilotManager.CurrentWaypointIndex;
+            var coPilotNote = CoPilotConfig?.Length > currentWaypointIndex ? CoPilotConfig[currentWaypointIndex] : null;
+
+            // Log solo se la nota cambia o ogni 1 secondo
+            if (coPilotNote != CoPilotKey || Time.time - lastLogTime >= 1.0f)
+            {
+                Main.Logger.Log($"Waypoint corrente: {currentWaypointIndex}, Nota: {coPilotNote ?? "null"}");
+                lastLogTime = Time.time;
+            }
 
             if (Main.Settings.ShowCurrentWaypoint)
             {
                 GUI.Label(
                     new Rect(0, 0, 200, 200),
-                    $"Waypoint {CoPilotManager.CurrentWaypointIndex}\nCoPilot: {CoPilot}"
+                    $"Waypoint {currentWaypointIndex}\nCoPilot: {coPilotNote ?? "null"}"
                 );
             }
 
-            if (CoPilot == null || Textures?.ContainsKey(CoPilot) != true)
+            if (coPilotNote == null || Textures?.ContainsKey(coPilotNote) != true)
             {
-                Main.Logger.Log($"[WARNING] Texture non trovata per nota: {CoPilot}");
+                if (coPilotNote != CoPilotKey || Time.time - lastLogTime >= 1.0f)
+                {
+                    Main.Logger.Log($"[WARNING] Texture non trovata per nota: {coPilotNote ?? "null"}");
+                }
                 return;
             }
 
-            var texture = Textures![CoPilot];
+            var texture = Textures![coPilotNote];
             if (texture == null)
             {
-                Main.Logger.Log($"[ERROR] Texture nulla per nota: {CoPilot}");
+                if (coPilotNote != CoPilotKey || Time.time - lastLogTime >= 1.0f)
+                {
+                    Main.Logger.Log($"[ERROR] Texture nulla per nota: {coPilotNote}");
+                }
                 return;
             }
-            Main.Logger.Log($"Disegno texture: {CoPilot}");
+
+            if (coPilotNote != CoPilotKey || Time.time - lastLogTime >= 1.0f)
+            {
+                Main.Logger.Log($"Disegno texture: {coPilotNote}");
+            }
 
             var halfSize = Main.Settings.CoPilotSize / 2;
             GUI.DrawTexture(
@@ -55,12 +72,13 @@ namespace ArtOfRallyCoPilot
                 ScaleMode.ScaleToFit
             );
 
-            var newKey = CoPilotConfig?[CoPilotManager.CurrentWaypointIndex];
+            var newKey = CoPilotConfig?.Length > currentWaypointIndex ? CoPilotConfig[currentWaypointIndex] : null;
             if (newKey != null && newKey != CoPilotKey)
             {
                 CoPilotKey = newKey;
                 LastTimestamp = Time.time;
                 PlayAudioNote(newKey);
+                Main.Logger.Log($"Riproduzione audio avviata per: {newKey}");
             }
         }
 
@@ -78,10 +96,11 @@ namespace ArtOfRallyCoPilot
                 audioSource = new GameObject("CoPilotAudio").AddComponent<AudioSource>();
                 audioSource.playOnAwake = false;
                 audioSource.spatialBlend = 0f;    // 2D audio
-                audioSource.priority = 0;         // Massima priorità
+                audioSource.priority = 88;         // Massima 
                 audioSource.loop = false;         // Non ripetere
                 audioSource.dopplerLevel = 0f;    // No effetto Doppler
                 GameObject.DontDestroyOnLoad(audioSource.gameObject);
+                Main.Logger.Log("AudioSource creato");
             }
 
             if (audioSource.isPlaying)
@@ -89,7 +108,7 @@ namespace ArtOfRallyCoPilot
 
             audioSource.clip = AudioClips[noteKey];
             audioSource.volume = Main.Settings.AudioVolume;
-            Main.Logger.Log($"Riproduzione audio: {noteKey}, Volume: {audioSource.volume}");
+            Main.Logger.Log($"Riproduzione audio: {noteKey}, Volume: {audioSource.volume}, Clip duration: {audioSource.clip.length} secondi");
             audioSource.Play();
         }
 
