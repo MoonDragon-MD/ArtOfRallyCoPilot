@@ -7,8 +7,6 @@ NB: With my version of ffmpeg the wav file was not being read by Unity so I reco
 
 In the “Make-assets” folder you will find the script to create the audios and the GIMP file for the images. The script starts with “python3 genera-audio-wav.py” and has as dependency “pip install edge-tts”
 
-Soon I will make a version for Nexusmod
-
 ### Requirements on GNU/Linux (Debian and derivatives)
 sudo apt install mono-complete msbuild nuget
 
