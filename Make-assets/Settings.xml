@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CoPilotSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <CoPilotMode>Auto</CoPilotMode>
+  <ShowCurrentWaypoint>true</ShowCurrentWaypoint>
+  <AssetSet>default</AssetSet>
+  <ConfigSet>default</ConfigSet>
+  <CoPilotSize>190</CoPilotSize>
+  <PositionY>0.09</PositionY>
+  <PositionX>0.5</PositionX>
+  <EnableAudio>true</EnableAudio>
+  <AudioVolume>1</AudioVolume>
+  <AudioSet>default</AudioSet>
+  <DistanceTolerance>10</DistanceTolerance>
+</CoPilotSettings>
