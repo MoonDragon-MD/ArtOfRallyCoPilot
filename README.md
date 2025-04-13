@@ -1,7 +1,11 @@
 # Art Of Rally CoPilot
 This mod integrates the audio as a real co -pilot, I started from the existing mod: [Art Of Rally Pace Notes](https://github.com/Theaninova/ArtOfRallyPaceNotes) 
 
-Use only with WAV files from a second otherwise otherwise it does not load them and must be of the format: Not compressed PCM, with 8 or 16 bit, mono or stereo
+Use only with WAV files from a second otherwise otherwise it does not load them and must be of the format: Not compressed PCM, 16 bit, stereo
+
+NB: With my version of ffmpeg the wav file was not being read by Unity so I recoded with “fre:ac free audio converter” with wav setting “Signed 16 bit PCM”
+
+In the “Make-assets” folder you will find the script to create the audios and the GIMP file for the images. The script starts with “python3 genera-audio-wav.py” and has as dependency “pip install edge-tts”
 
 Soon I will make a version for Nexusmod
 
