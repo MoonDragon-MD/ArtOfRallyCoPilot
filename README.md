@@ -10,7 +10,7 @@ In the “Make-assets” folder you will find the script to create the audios an
 ### Requirements on GNU/Linux (Debian and derivatives)
 sudo apt install mono-complete msbuild nuget
 
-wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+```wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb```
 
 sudo dpkg -i packages-microsoft-prod.deb
 
